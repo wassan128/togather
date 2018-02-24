@@ -73,5 +73,7 @@ def page_not_found(e):
     return ";-("
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.debug = True
+    app.run(port=port)
 

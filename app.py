@@ -7,17 +7,24 @@ import time
 
 
 app = Flask(__name__)
-ENDPOINT = os.environ["ENDPOINT"]
+
+BASE_URL = "https://slack.com/api/chat.postMessage"
+TOKEN = os.environ["TOKEN"]
+CHANNEL = os.environ["CHANNEL"] 
+THTS = os.environ["THTS"]
+NAME = "Geek bot"
+ICON_URL = os.environ["ICON_URL"]
+
 RSS_FEEDS = [
     {"name": u"Gizmodo", "url": "http://feeds.gizmodo.jp/rss/gizmodo/index.xml"},
     {"name": u"GIGAZINE", "url": "http://feed.rssad.jp/rss/gigazine/rss_2.0"}
 ]
-RSS_MAX = 3
+RSS_MAX = 1
 
 
 def post_slack(payload):
     try:
-        requests.post(ENDPOINT, json=payload)
+        requests.post(BASE_URL, payload)
     except Exception as e:
         return "err"
     return ""
@@ -65,7 +72,14 @@ def bot_incoming():
     if msg is None:
         return "err"
 
-    payload = {"text": msg}
+    payload = {
+        "token": TOKEN,
+        "channel": CHANNEL,
+        "username": NAME,
+        "icon_url": ICON_URL,
+        "text": msg,
+        "thread_ts": THTS
+    }
     return post_slack(payload)
 
 @app.errorhandler(404)
